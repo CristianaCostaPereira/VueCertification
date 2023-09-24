@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center">
+    <div class="flex justify-center">
         <div
             class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-6"
             v-for="movie in movies"
@@ -22,7 +22,9 @@
                     {{ genre }}
                 </span>
 
-                <p class="my-3 font-normal text-gray-700 dark:text-gray-400">{{ movie.description }}</p>
+                <p class="my-3 font-normal text-gray-700 dark:text-gray-400">
+                    {{ movie.description }}
+                </p>
 
                 <div class="flex items-center text-gray-200 mt-2.5 mb-5">
                     <div class="pr-3">
@@ -30,11 +32,17 @@
                     </div>
 
                     <div
-                        v-for="index in movie.rating"
-                        :key="index">
+                        v-for="starIndex in maxRatingStars"
+                        :key="starIndex">
 
-                        <!-- <StarIcon style="color:rgb(233, 192, 26); height: 20px;"></StarIcon> -->
-                        <StarIcon class="w-4 h-4 text-yellow-400 mr-1"></StarIcon>
+                        <StarIcon
+                            class="w-4 h-4 mr-1"
+                            :class="[
+                                {'text-yellow-400' : starIndex <= movie.rating},
+                                {'text-gray-400' : starIndex > movie.rating}
+                               
+                            ]">
+                        </StarIcon>
                     </div>
                 </div>
             </div>
@@ -47,5 +55,6 @@
     import { StarIcon } from "@heroicons/vue/24/solid"
     import { items } from "../movies.json"
 
+    const maxRatingStars = 5
     const movies = ref(items)
 </script>
