@@ -26,24 +26,25 @@
                     {{ movie.description }}
                 </p>
 
-                <div class="flex items-center text-gray-200 mt-2.5 mb-5">
+                <div class="flex items-center text-gray-200 mt-5">
                     <div class="pr-3">
                         Rating: ({{ movie.rating }}/5)
                     </div>
-
-                    <div
+             
+                    <button
                         v-for="starIndex in maxRatingStars"
-                        :key="starIndex">
+                        :key="`${movie.id}-${starIndex}`">
 
                         <StarIcon
-                            class="w-4 h-4 mr-1"
+                            class="w-4 h-4 mr-1 h-6"
                             :class="[
-                                {'text-yellow-400' : starIndex <= movie.rating},
-                                {'text-gray-400' : starIndex > movie.rating}
-                               
-                            ]">
+                                { 'text-yellow-400' : starIndex <= movie.rating },
+                                { 'text-gray-400' : starIndex > movie.rating },
+                                { 'cursor-not-allowed' : starIndex == movie.rating }
+                            ]"
+                            @click="ratingMovie(movie, starIndex)">
                         </StarIcon>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -52,9 +53,16 @@
 
 <script setup>
     import { ref } from 'vue'
-    import { StarIcon } from "@heroicons/vue/24/solid"
-    import { items } from "../movies.json"
+    import { StarIcon } from '@heroicons/vue/24/solid'
+    import { items } from '../movies.json'
 
     const maxRatingStars = 5
     const movies = ref(items)
+
+    function ratingMovie(movie, newRating) {
+        if (movie.rating == newRating) {
+            return
+        }
+        movie.rating = newRating
+    }
 </script>
