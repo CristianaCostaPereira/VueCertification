@@ -9,6 +9,16 @@
                 <img class="rounded-t-lg" :src="movie.image" alt="" />
             </a>
 
+            <div class="right-corner-star-content">
+                <StarIcon class="text-yellow-500 h-10 right-corner-star"
+                    :class="[
+                        { 'text-yellow-400' : starIndex <= movie.rating },
+                        { 'text-gray-500' : starIndex > movie.rating },
+                        { 'cursor-not-allowed' : starIndex == movie.rating }
+                    ]">
+                </StarIcon>
+            </div>
+
             <div class="p-6">
                 <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                     {{ movie.name }}
@@ -66,3 +76,15 @@
         movie.rating = newRating
     }
 </script>
+
+<style scoped>
+.right-corner-star-content {
+    float: right;
+}
+.right-corner-star {
+    /* position: absolute; */
+    top: 0.5vw;
+    left: 36vw;
+}
+
+</style>
