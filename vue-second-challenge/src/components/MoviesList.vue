@@ -3,24 +3,12 @@
         <div v-for="movie in movies"
             :key="movie.id">
 
-            <!-- <span class="right-corner-star-content"> -->
-               
-
-                <!-- <span style="color: white; position: relative; left: 15px;top: -31px; font-weight: 800;">
-                    {{ movie.rating }}
-                </span> -->
-            <!-- </span> -->
-
-            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-6" style="position: relative;">
-                <div style="position: absolute; right: 1px;">
-                    <StarIcon
-                        class="text-yellow-500 h-10"
-                        :class="[
-                            { 'text-gray-500' : movie.rating }
-                        ]">
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-6 card-content">
+                <div class="star-position">
+                    <StarIcon class="text-yellow-500 h-10">
                     </StarIcon>
                     
-                    <span style="color: white; font-weight: 800;">
+                    <span class="star-rating-position text-gray-500">
                         {{ movie.rating }}
                     </span>
                 </div>
@@ -89,10 +77,19 @@
 </script>
 
 <style scoped>
-.right-corner-star-content {
-    /* position: relative;
-    top: 66px;
-    right: -386px; */
+.card-content {
+    position: relative;
 }
 
+.star-position {
+    position: absolute;
+    right: 1px;
+}
+
+.star-rating-position {
+    font-weight: 800;
+    position: absolute;
+    top: 8px;
+    right: 15px;
+}
 </style>
