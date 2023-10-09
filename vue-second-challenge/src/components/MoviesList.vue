@@ -1,9 +1,10 @@
 <template>
-    <div class="flex justify-center">
-        <div v-for="movie in movies"
+    <div class="flex flex-col md:flex-row justify-center">
+        <div
+            v-for="movie in movies"
             :key="movie.id">
 
-            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-6 card-content">
+            <div class="max-w-sm block bg-white overflow-hidden border-2 h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-6 card-content">
                 <div class="star-position">
                     <StarIcon
                         class="h-10"
@@ -22,8 +23,8 @@
                     <img class="rounded-t-lg" :src="movie.image" alt="" />
                 </a>
     
-                <div class="p-6">
-                    <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <div class="p-4">
+                    <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mt-2 mb-2 font-bold">
                         {{ movie.name }}
                     </h5>
            
