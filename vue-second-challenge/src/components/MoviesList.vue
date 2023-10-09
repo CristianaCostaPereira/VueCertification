@@ -5,11 +5,16 @@
 
             <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-6 card-content">
                 <div class="star-position">
-                    <StarIcon class="text-yellow-500 h-10">
+                    <StarIcon
+                        class="h-10"
+                        :class="[
+                            { 'text-yellow-400': movie.rating },
+                            { 'text-gray-500': movie.rating == null }
+                        ]">
                     </StarIcon>
                     
-                    <span class="star-rating-position text-gray-500">
-                        {{ movie.rating }}
+                    <span class="star-rating-position text-blue-900">
+                        {{ movie.rating ? movie.rating : '-' }}
                     </span>
                 </div>
 
@@ -46,9 +51,9 @@
                             <StarIcon
                                 class="w-4 h-4 mr-1 h-6"
                                 :class="[
-                                    { 'text-yellow-400' : starIndex <= movie.rating },
-                                    { 'text-gray-400' : starIndex > movie.rating },
-                                    { 'cursor-not-allowed' : starIndex == movie.rating }
+                                    { 'text-yellow-400': starIndex <= movie.rating },
+                                    { 'text-gray-400': starIndex > movie.rating },
+                                    { 'cursor-not-allowed': starIndex == movie.rating }
                                 ]"
                                 @click="ratingMovie(movie, starIndex)">
                             </StarIcon>
@@ -90,6 +95,6 @@
     font-weight: 800;
     position: absolute;
     top: 8px;
-    right: 15px;
+    right: 16px;
 }
 </style>
