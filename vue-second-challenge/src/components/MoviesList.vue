@@ -13,6 +13,7 @@
                             { 'text-gray-500': movie.rating == null }
                         ]">
                     </StarIcon>
+                    <!-- :class="[movie.rating ? 'text-yellow-500' : 'text-gray-500']" -->
                     
                     <span class="star-rating-position text-blue-900">
                         {{ movie.rating ? movie.rating : '-' }}
