@@ -1,5 +1,15 @@
 <template>
   <div class="app">
+    <div class="add-movie-button-wrapper">
+      <button
+        type="button"
+        class="add-movie-button"
+        @click="addMovie()">
+        
+        Add Movie
+      </button>
+    </div>
+
     <div class="movie-list">
       <div
         class="movie-item"
@@ -13,19 +23,22 @@
               class="movie-item-star-rating-icon"
               :class="[movie.rating ? 'text-yellow-500' : 'text-gray-500']"
             />
+
             <div class="movie-item-star-content-wrapper">
               <span
                 v-if="movie.rating"
                 id="rating-stars"
-                class="movie-item-star-content-rating-rated"
-              >
+                class="movie-item-star-content-rating-rated">
+
                 {{ movie.rating }}
               </span>
+
               <span v-else class="movie-item-star-content-rating-not-rated">
                 -
               </span>
             </div>
           </div>
+
           <img :src="movie.image" class="movie-item-image" alt="" />
         </div>
 
@@ -84,7 +97,11 @@ import { items } from "./movies.json"
 
 const movies = ref(items)
 
-function updateRating(movieIndex, rating) {
+function updateRating (movieIndex, rating) {
   movies.value[movieIndex].rating = rating
+}
+
+function addMovie () {
+  alert ('hi')
 }
 </script>
