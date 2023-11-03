@@ -7,6 +7,7 @@
         @click="addMovie()">
         
         Add Movie
+        <!-- <AddMoviesForm></AddMoviesForm> -->
       </button>
     </div>
 
@@ -94,14 +95,17 @@
 import { ref } from "vue"
 import { StarIcon } from "@heroicons/vue/24/solid"
 import { items } from "./movies.json"
+import AddMoviesForm from "@/components/AddMovieForm.vue"
 
 const movies = ref(items)
+const openForm = ref(false)
 
 function updateRating (movieIndex, rating) {
   movies.value[movieIndex].rating = rating
 }
 
 function addMovie () {
+  openForm.value = true
   alert ('hi')
 }
 </script>
