@@ -9,6 +9,7 @@ import {
   EyeIcon,
 } from "@heroicons/vue/24/solid";
 import MovieStarRating from "./MovieStarRating.vue";
+import { useRoute, useRouter} from "vue-router";
 
 const props = defineProps({
   movie: { type: Object, default: null },
@@ -27,6 +28,12 @@ function removeMovie() {
 
 function editMovie() {
   emit("edit", props.movie.id);
+}
+
+const router = useRouter();
+const route = useRoute();
+
+function goToMovieDetails() {
 }
 </script>
 
@@ -91,6 +98,10 @@ function editMovie() {
               @click="removeMovie()"
             >
               <TrashIcon class="w-4 h-4" />
+            </button>
+
+            <button class="movie-item-action-remove-button" @click="goToMovieDetails()">
+              <EyeIcon class="w-4 h-4" />
             </button>
           </div>
         </div>

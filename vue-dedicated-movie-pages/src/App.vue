@@ -74,6 +74,8 @@ function removeRatings() {
 </script>
 
 <template>
+  <router-view></router-view>
+  
   <div class="app">
     <AppModal
       :show="showMovieForm"
