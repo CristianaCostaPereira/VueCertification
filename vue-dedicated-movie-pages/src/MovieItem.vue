@@ -9,7 +9,6 @@ import {
   EyeIcon,
 } from "@heroicons/vue/24/solid";
 import MovieStarRating from "./MovieStarRating.vue";
-import { useRoute, useRouter} from "vue-router";
 
 const props = defineProps({
   movie: { type: Object, default: null },
@@ -30,10 +29,8 @@ function editMovie() {
   emit("edit", props.movie.id);
 }
 
-const router = useRouter();
-const route = useRoute();
-
 function goToMovieDetails() {
+  emit("direction", props.movie.id);
 }
 </script>
 
