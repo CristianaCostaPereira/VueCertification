@@ -11,7 +11,7 @@ import MovieDetailPage from "@/pages/MovieDetailPage.vue";
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
-  { path: '/:id', name: 'MovieDetail', component: MovieDetailPage },
+  { path: '/:id', name: 'MovieDetail', component: MovieDetailPage, props: true },
 ]
 
 const router = createRouter({

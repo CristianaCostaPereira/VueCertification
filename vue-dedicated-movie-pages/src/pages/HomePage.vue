@@ -128,7 +128,7 @@ function removeRatings() {
 
         <!-- :to="{ name: movie.name, path: movie.id }" -->
         <router-link
-          :to="movie.id">
+          :to="{ name: movie.name, params: { id: movie.id }}">
         </router-link>
 
         <router-view></router-view>

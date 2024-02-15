@@ -3,6 +3,7 @@ import MovieItem from "@/MovieItem.vue";
 import AppModal from "@/AppModal.vue";
 import { items } from "@/movies.json";
 import { computed, ref, defineAsyncComponent } from "vue";
+import { useRouter } from "vue-router";
 
 // async components
 const MovieForm = defineAsyncComponent(() => import("@/MovieForm.vue"));
@@ -71,11 +72,17 @@ function removeRatings() {
     return movie;
   });
 }
+
+const router = useRouter()
+
+function goToMovie(id) {
+  router.push({ name: 'MovieDetail', params: { id: id } })
+}
 </script>
 
 <template>
   <router-view></router-view>
-  
+
   <div class="app">
     <AppModal
       :show="showMovieForm"
@@ -124,6 +131,7 @@ function removeRatings() {
         @edit="editMovie"
         @remove="removeMovie"
         @update:rating="updateRating"
+        @direction="goToMovie"
       />
     </div>
   </div>

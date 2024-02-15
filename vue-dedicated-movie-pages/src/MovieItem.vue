@@ -15,7 +15,7 @@ const props = defineProps({
   index: { type: Number, default: null },
 });
 
-const emit = defineEmits(["edit", "remove", "update:rating"]);
+const emit = defineEmits(["edit", "remove", "update:rating", "direction"]);
 
 function updateRating(rating) {
   emit("update:rating", props.movie.id, rating);
