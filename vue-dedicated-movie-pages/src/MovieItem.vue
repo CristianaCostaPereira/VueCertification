@@ -15,7 +15,7 @@ const props = defineProps({
   index: { type: Number, default: null },
 });
 
-const emit = defineEmits(["edit", "remove", "update:rating", "direction"]);
+const emit = defineEmits(["edit", "remove", "update:rating"]);
 
 function updateRating(rating) {
   emit("update:rating", props.movie.id, rating);
@@ -27,10 +27,6 @@ function removeMovie() {
 
 function editMovie() {
   emit("edit", props.movie.id);
-}
-
-function goToMovieDetails() {
-  emit("direction", props.movie.id);
 }
 </script>
 
@@ -97,9 +93,12 @@ function goToMovieDetails() {
               <TrashIcon class="w-4 h-4" />
             </button>
 
-            <button class="movie-item-action-remove-button" @click="goToMovieDetails()">
+            <router-link
+              class="movie-item-action-remove-button"
+              :to="{ name: 'movie-detail', params: { id: movie.id } }"
+              >
               <EyeIcon class="w-4 h-4" />
-            </button>
+            </router-link>
           </div>
         </div>
       </div>

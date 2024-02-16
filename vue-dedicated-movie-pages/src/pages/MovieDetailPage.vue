@@ -5,16 +5,20 @@ import MovieStarRating from "@/MovieStarRating.vue";
 
 // Right now we're just displaying the info for the first movie
 // You should get the id from the URL and display the info for the proper movie
-// 💡 HINT: You do NOT need to modify the template
+// 💡 HINT: You do NOT need to modifiy the template
+const props = defineProps({
+  id: Number,
+});
 
-const movie = ref(items[0]);
+const movies = ref(items);
+
+const movie = computed (() => movies.value.find((film) => film.id === props.id))
+// const movie = computed(() => movies.value.find((m) => m.id === props.id));
 </script>
-
 <template>
   <div
     class="container flex items-center max-w-6xl gap-4 p-10 m-auto dark:text-white"
-    >
-    <router-view></router-view>
+  >
     <figure class="relative">
       <MovieStarRating :rating="movie.rating" class="absolute top-5 right-5" />
       <img :src="movie.image" :alt="movie.name" class="w-96" />

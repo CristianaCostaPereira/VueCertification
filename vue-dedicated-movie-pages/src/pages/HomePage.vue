@@ -123,16 +123,8 @@ function removeRatings() {
         :movie="movie"
         @edit="editMovie"
         @remove="removeMovie"
-        @update:rating="updateRating">
-
-
-        <!-- :to="{ name: movie.name, path: movie.id }" -->
-        <router-link
-          :to="{ name: movie.name, params: { id: movie.id }}">
-        </router-link>
-
-        <router-view></router-view>
-      </MovieItem>
+        @update:rating="updateRating"
+      />
     </div>
   </div>
 </template>

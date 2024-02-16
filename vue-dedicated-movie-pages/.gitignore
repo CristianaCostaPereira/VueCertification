@@ -15,11 +15,8 @@ coverage
 *.local
 
 CHECKLIST.md
-completed.gif
-challenge-example.gif
 tailwind.config.js
 vite.config.js
-yarn.lock
 
 /cypress/videos/
 /cypress/screenshots/
