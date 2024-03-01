@@ -2,8 +2,7 @@
 // Start here your app logic
 import { ref } from 'vue';
 
-const current = ref(0);
-const operator = ref(null);
+const current = ref('');
 
 function clear() {
   current.value = ''
@@ -17,13 +16,13 @@ function append(number) {
   current.value = `${current.value}${number}`
 }
 
-function dot(params) {
+function dot() {
   if (current.value.indexOf('.') === -1) {
     append('.')
   }
 }
 
-function equal(params) {
+function equal() {
   current.value = eval(current.value);
 }
 </script>
