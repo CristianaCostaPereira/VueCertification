@@ -115,7 +115,7 @@
         v-if="isTie"
         class="text-6xl font-bold mb-8">
         
-        Cat Got It!
+        Cat Got It 🤪!
       </h3>
   
       <button
