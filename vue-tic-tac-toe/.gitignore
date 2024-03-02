@@ -15,8 +15,6 @@ coverage
 *.local
 
 CHECKLIST.md
-package.json
-package-lock.json
 *config.js
 yarn.lock
 
