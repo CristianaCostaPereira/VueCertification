@@ -75,10 +75,6 @@
       Tic Tac Toe
     </h1>
 
-    <h3 class="text-xl mb-4">
-      Player {{ player }}'s turn
-    </h3>
-
     <div class="flex flex-col items-center mb-8">
       <div
         v-for="(row, x) in board"
@@ -101,17 +97,33 @@
     </div>
 
     <h2
-      v-if="winner"
-      class="text-6xl font-bold mb-8">
+      v-if="!isOver"
+      class="text-xl mb-4">
 
-      Player '{{ winner }}' wins!
+      Player {{ player }}'s turn
     </h2>
 
-    <button
-      class="px-4 py-2 bg-red-500 rounded uppercase font-bold hover:bg-red-600 duration-300"
-      @click="resetGame">
+    <div v-else>
+      <h2
+        v-if="winner"
+        class="text-6xl font-bold mb-8">
+  
+        Player '{{ winner }}' wins!
+      </h2>
 
-      Reset game
-    </button>
+      <h3
+        v-if="isTie"
+        class="text-6xl font-bold mb-8">
+        
+        Cat Got It!
+      </h3>
+  
+      <button
+        class="px-4 py-2 bg-red-500 rounded uppercase font-bold hover:bg-red-600 duration-300"
+        @click="resetGame">
+  
+        Reset game
+      </button>
+    </div>
   </main>
 </template>
