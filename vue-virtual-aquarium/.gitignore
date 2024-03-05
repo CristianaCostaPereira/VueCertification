@@ -15,7 +15,6 @@ coverage
 *.local
 
 CHECKLIST.md
-*config.js
 yarn.lock
 
 /cypress/videos/
