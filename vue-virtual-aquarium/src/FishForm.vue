@@ -9,7 +9,7 @@
     "No Name Fish",
     "Gus",
     "Mr. Buttons",
-    "Blubbles",
+    "Bubbles",
     "Mark",
   ];
 
@@ -28,8 +28,6 @@
 
   const input = ref();
   function addFish() {
-    console.log("adding fish");
-
     if (!newFish.value.name) {
       return;
     }
@@ -80,12 +78,13 @@
       type="text"
       v-model="newFish.name"
       class="w-full p-2 text-lg rounded"
-      placeholder="Mr. Buttons"
+      placeholder="Gus"
     />
 
     <button
       type="submit"
       class="w-full p-4 mt-5 text-xl text-white bg-red-600 rounded">
+
       Add Fish
     </button>
   </form>
@@ -93,11 +92,7 @@
 
 <style scoped>
   label {
-    /* @apply text-black font-bold mb-2 block; */
-    color: rgb(2, 130, 92); /* Assuming text-black corresponds to black color */
-    font-weight: bold;
-    margin-bottom: 0.5rem; /* Equivalent to mb-2 in Tailwind */
-    display: block;
+    @apply text-white font-bold mb-2 block;
   }
   .selected {
     filter: drop-shadow(2px 2px 0 #00cfff) drop-shadow(-2px -2px 0 #00cfff)
