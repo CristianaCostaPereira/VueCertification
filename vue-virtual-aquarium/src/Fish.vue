@@ -23,11 +23,10 @@
   const generateTimeout = () =>
     Math.floor(Math.random() * maxMilliseconds) + minMilliseconds;
   const timeout = ref(0);
-  const transition = computed(() => `all ${timeout.value / 1000}s linear`); // Dynamic transition
+  const transition = computed(() => `all ${timeout.value / 1000}s linear`);
 
   function doTimeout() {
     timeout.value = generateTimeout();
-
     setTimeout(() => {
       moveFish();
       doTimeout();
@@ -36,7 +35,6 @@
 
   function moveFish() {
     directionRight.value = !directionRight.value;
-
     position.value = {
       x: generateXPosition(),
       y: generateYPosition(),
@@ -44,23 +42,23 @@
   }
 
   function generateXPosition() {
-    const x = Math.random() * aquariumEl.value.offsetWidth - fishDOMEl.value.clientWidth;
+    const x =
+      Math.random() * aquariumEl.value.offsetWidth - fishDOMEl.value.clientWidth;
     const xPadded = x < 0 ? 0 : x;
-
-    if (position.value.x === 0) {
-      return xPadded;
-    }
+    if (position.value.x === 0) return xPadded;
 
     if (
       // only move in the opposite direction
-      directionRight.value && xPadded > position.value.x &&
+      directionRight.value &&
+      xPadded > position.value.x &&
       // and move at least 200 pixels horizontally
       xPadded + 200 > position.value.x
     ) {
       return xPadded;
     } else if (
       // only move in the opposite direction
-      !directionRight.value && xPadded < position.value.x &&
+      !directionRight.value &&
+      xPadded < position.value.x &&
       // and move at least 200 pixels horizontally
       xPadded - 200 < position.value.x
     ) {
@@ -71,7 +69,9 @@
   }
 
   function generateYPosition() {
-    const y = Math.random() * aquariumEl.value.offsetHeight - fishDOMEl.value.clientHeight;
+    const y =
+      Math.random() * aquariumEl.value.offsetHeight -
+      fishDOMEl.value.clientHeight;
     const yPadded = y < 0 ? 0 : y;
 
     // move this fish at least 200 pixels vertically
@@ -84,11 +84,6 @@
     }
   }
 
-  const directionRight = ref(generateDirection());
-  function generateDirection() {
-    return Math.random() > 0.5;
-  }
-
   onMounted(() => {
     aquariumEl.value = document.querySelector("#aquarium");
 
@@ -98,6 +93,11 @@
       doTimeout();
     }, 2);
   });
+
+  const directionRight = ref(generateDirection());
+  function generateDirection() {
+    return Math.random() > 0.5;
+  }
 
   // Fish hunger
   const hunger = ref(0);
@@ -124,7 +124,6 @@
 
   const size = computed(() => {
     const random = Math.random();
-    
     if (random <= 0.2) {
       return "w-16";
     } else if (random <= 0.5) {
@@ -191,10 +190,17 @@
   }
 
   .speech-bubble {
-    @apply absolute bottom-[100%] px-4 py-2 rounded-full left-[50%] whitespace-nowrap;
+    /* @apply absolute bottom-[100%] px-4 py-2 rounded-full left-[50%] whitespace-nowrap; */
+    position: absolute;
+    bottom: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px; /* Adjust px-4 and py-2 values accordingly */
+    border-radius: 9999px; /* Rounded-full in Tailwind CSS */
+    white-space: nowrap;
     background: rgba(255, 255, 255, 0.9);
   }
-
+  
   .speech-bubble::before {
     content: "";
     position: absolute;
