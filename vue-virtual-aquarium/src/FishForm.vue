@@ -1,158 +1,106 @@
 <script setup>
   import {ref} from "vue";
-  import tuna from '../public/tuna.png'
-  import tropical from '../public/tropical-fish.png'
-  import guppie from '../public/guppie.png'
-  import goldfish from '../public/goldfish.png'
-  import purple from '../public/golden-purple-fish.png'
-  // import {v4 as uuidv4} from 'uuid';
 
-  const emit = defineEmits(['addFish']);
+  const defaultType = "golden-purple-fish";
 
-  const fishList = ref([
-    // {type: 'golden', image: golden, selectedImage: goldenSelected, isSelected: false},
-    {type: 'tuna', image: tuna, isSelected: false},
-    {type: 'tropical', image: tropical, isSelected: false},
-    {type: 'guppie', image: guppie, isSelected: false},
-    {type: 'goldfish', image: goldfish, isSelected: false},
-    {type: 'purple', image: purple, isSelected: false},
-  ]);
+  const emit = defineEmits(['add-fish']);
 
-  const fishName = ref('');
+  const randomNames = [
+    "No Name Fish",
+    "Gus",
+    "Mr. Buttons",
+    "Blubbles",
+    "Mark",
+  ];
 
-  const selectFish = () => {
-    fishList.value.forEach(fish => {
-      fish.isSelected = fish.type === type;
-    });
-  }
+  const newFish = ref({
+    type: defaultType,
+    name: getRandomName(),
+  });
 
-  const randomX = () => {
-    return Math.floor(Math.random() * 800);
-  }
+  const fishes = [
+    { name: "Golden Purple Fish", type: "golden-purple-fish", size: "w-36" },
+    { name: "Goldfish", type: "goldfish", size: "w-28" },
+    { name: "Guppie", type: "guppie", size: "w-24" },
+    { name: "Tropical Fish", type: "tropical-fish", size: "w-48" },
+    { name: "Tuna", type: "tuna", size: "w-12" },
+  ];
 
-  const randomY = () => {
-    return Math.floor(Math.random() * 400);
-  }
+  const input = ref();
+  function addFish() {
+    console.log("adding fish");
 
-  const addFish = () => {
-    const selectedFish = fishList.value.find(fish => fish.isSelected);
-
-    if (!selectedFish || !fishName.value) {
+    if (!newFish.value.name) {
       return;
     }
 
-    const uniqueId = () => {
-      (Math.random() + 1).toString(36).substring(7);
-    }
-
-    const payload = {
-      type: selectedFish.type,
-      name: fishName.value,
-      startX: randomX(),
-      startY: randomY(),
-      id: uniqueId(),
-    }
-
-    fishList.value.forEach(fish => {
-      fish.isSelected = false;
+    emit("add-fish", {
+      id: Math.random().toString(36),
+      ...newFish.value,
+      size: fishes.find((fish) => fish.type === newFish.value.type).size,
     });
 
-    fishName.value = '';
+    reset();
 
-    emit('addFish', payload);
+    input.value.focus();
+  }
+
+  function reset() {
+    newFish.value.name = getRandomName();
+  }
+
+  function getRandomName() {
+    return randomNames[Math.floor(Math.random() * randomNames.length)];
   }
 </script>
 
 <template>
-  <div class="fish-selector">
-    <h1>Choose a fish:</h1>
+  <form class="h-full p-5 bg-[#1f3d7c]" @submit.prevent="addFish">
+    <label>Fish Type</label>
 
-    <div class="fish-list">
-      <ul>
-        <li
-          v-for="fish in fishList"
-          :key="fish.type"
-          @click="selectFish(fish.type)"
-          :class="fish.isSelected ? 'selected' : ''">
+    <ul class="flex flex-wrap mt-4">
+      <li
+        @click="newFish.type = fish.type"
+        v-for="fish in fishes"
+        :key="fish.type"
+        class="block w-1/2 mb-2 cursor-pointer"
+        :class="{
+          selected: fish.type === newFish.type,
+        }">
 
-          <img :src="fish.isSelected ? fish.selectedImage :fish.image" :alt="fish.type"/>
-        </li>
-      </ul>
-    </div>
+        <img :src="`/${fish.type}.png`" :alt="fish.name" class="w-24" />
+      </li>
+    </ul>
 
-    <form @submit.prevent="addFish">
-      <input
-        v-model="fishName"
-        type="text"
-        placeholder="Enter a name for your fish"
-        required/>
-      <!-- <br/> -->
-      <div>
-        <button type="submit">ADD FISH</button>
-      </div>
-    </form>
-  </div>
+    <label for="fish-name" class="mt-10">Name </label>
+
+    <input
+      id="fish-name"
+      ref="input"
+      type="text"
+      v-model="newFish.name"
+      class="w-full p-2 text-lg rounded"
+      placeholder="Mr. Buttons"
+    />
+
+    <button
+      type="submit"
+      class="w-full p-4 mt-5 text-xl text-white bg-red-600 rounded">
+      Add Fish
+    </button>
+  </form>
 </template>
 
 <style scoped>
-  .fish-selector {
-    text-align: center;
-    height: 680px;
-    width: 500px;
-    border: 20px solid goldenrod;
-    background-color: bisque;
-  }
-
-  h1 {
-    font-family: "Rancho", serif;
-    font-size: 3rem;
-  }
-
-  .fish-list {
-    display: flex;
-  }
-
-  ul {
-    list-style: none;
-  }
-
-  li {
-    display: inline-block;
-    padding: 1rem;
-    margin: 5px;
-  }
-
-  li:hover {
-    cursor: pointer;
-  }
-
-  img {
-    width: 100px;
-    margin: 1rem;
-  }
-
-  input[type=text] {
-    width: 80%;
-    margin: 0 0 1rem 0;
-    padding: 1rem;
-    font-size: 1.5rem;
-    background-color: whitesmoke;
-    border-radius: 20px;
-    font-family: "Times New Roman", serif;
-    text-align: center;
-  }
-
-  ::placeholder {
-    text-align: center;
-  }
-
-  button {
-    height: 3rem;
-    width: 6rem;
-    border-radius: 50px;
-    background-color: lightblue;
+  label {
+    /* @apply text-black font-bold mb-2 block; */
+    color: rgb(2, 130, 92); /* Assuming text-black corresponds to black color */
     font-weight: bold;
-    font-size: 1rem;
-    font-family: "Rancho", serif;
+    margin-bottom: 0.5rem; /* Equivalent to mb-2 in Tailwind */
+    display: block;
+  }
+  .selected {
+    filter: drop-shadow(2px 2px 0 #00cfff) drop-shadow(-2px -2px 0 #00cfff)
+      drop-shadow(2px -2px 0 #00cfff) drop-shadow(-2px 2px 0 #00cfff);
   }
 </style>
