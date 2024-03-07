@@ -1,148 +1,148 @@
 <script setup>
-  import {computed, onMounted, ref } from "vue";
-  import tuna from "@/public/tuna.png";
-  import tropical from "@/public/tropical-fish.png";
-  import guppie from "@/public/guppie.png";
-  import goldfish from "@/public/goldfish.png";
-  import purple from "@/public/golden-purple-fish.png";
-  import skeleton from "public/dead.png";
-
-
-// import golden from "@/assets/goldfish.png";
-// import blue from "@/assets/bluefish.png";
-// import ray from "@/assets/mantaray.png";
-// import puffer from "@/assets/pufferfish.png";
-// import sword from "@/assets/swordfish.png";
-// import skeleton from "@/assets/fishskeleton.png";
+  import { computed, onMounted, ref } from 'vue'
+  import tuna from '../public/tuna.png'
+  import tropical from '../public/tropical-fish.png'
+  import guppie from '../public/guppie.png'
+  import goldfish from '../public/goldfish.png'
+  import purple from '../public/golden-purple-fish.png'
+  import skeleton from '../public/dead.png'
 
   const props = defineProps({
-    name: String,
-    type: String,
-    startX: Number,
-    startY: Number,
-    id: String
-  });
+    aquarium: {
+      name: { type: String, default: '' },
+      type: { type: String, default: '' },
+      startX: { type: Number },
+      startY: { type: Number },
+      id: { type: String, default: '' },
+    }
+  })
 
-  const y = ref(props.startY);
-  const x = ref(props.startX);
-  const isY = ref(true);
-  const isX = ref(true);
-  const directionName = ref('');
-  const stomach = ref(100);
-  const isDead = ref(false);
+  // const props = defineProps({
+  //   modelValue: { type: Object, default: null },
+  // });
 
-  const emit = defineEmits(['remove-fish']);
+  const y = ref(props.startY)
+  const x = ref(props.startX)
+  const isY = ref(true)
+  const isX = ref(true)
+  const directionName = ref('')
+  const stomach = ref(100)
+  const isDead = ref(false)
+
+  const emit = defineEmits(['remove-fish'])
 
   onMounted(() => {
-    leftOrRightFloat();
-  });
+    leftOrRightFloat()
+  })
 
   const generateRandomNumber = () => {
-    const numbers = [35, 45, 55, 65];
-    const randomIndex = Math.floor(Math.random() * numbers.length);
-    return numbers[randomIndex];
+    const numbers = [35, 45, 55, 65]
+    const randomIndex = Math.floor(Math.random() * numbers.length)
+    return numbers[randomIndex]
   }
 
   const leftOrRightFloat = () => {
-    const direction = ['left', 'right'];
-    const random = Math.floor(Math.random() * 2);
-    directionName.value = direction[random];
-    return direction[random];
+    const direction = ['left', 'right']
+    const random = Math.floor(Math.random() * 2)
+    directionName.value = direction[random]
+    return direction[random]
   }
 
-  let randomSpeed = generateRandomNumber();
+  let randomSpeed = generateRandomNumber()
 
   const fishType = computed(() => {
-    let image = '';
+  let image = ''
     switch (props.type) {
       case 'tuna':
-        image = tuna;
-        break;
+        image = tuna
+        break
       case 'tropical':
-        image = tropical;
-        break;
+        image = tropical
+        break
       case 'guppie':
-        image = guppie;
-        break;
+        image = guppie
+        break
       case 'goldfish':
-        image = goldfish;
-        break;
+        image = goldfish
+        break
       case 'purple':
-        image = purple;
-        break;
+        image = purple
+        break
     }
 
-    return image;
+    return image
   })
 
   const swim = () => {
     if (!isDead.value) {
       if (directionName.value === 'right') {
         if (y.value >= 410 || y.value <= 0) {
-          isY.value = !isY.value;
-          randomSpeed = generateRandomNumber();
+          isY.value = !isY.value
+          randomSpeed = generateRandomNumber()
         }
 
-        y.value += isY.value ? 1 : -1;
+        y.value += isY.value ? 1 : -1
 
         if (x.value >= 830 || x.value <= 0) {
-          isX.value = !isX.value;
-          randomSpeed = generateRandomNumber();
+          isX.value = !isX.value
+          randomSpeed = generateRandomNumber()
         }
 
-        x.value += isX.value ? 1 : -1;
+        x.value += isX.value ? 1 : -1
       }
-
 
       if (directionName.value === 'left') {
         if (y.value >= 410 || y.value <= 0) {
-          isY.value = !isY.value;
-          randomSpeed = generateRandomNumber();
+          isY.value = !isY.value
+          randomSpeed = generateRandomNumber()
         }
 
-        y.value -= isY.value ? 1 : -1;
+        y.value -= isY.value ? 1 : -1
 
         if (x.value >= 830 || x.value <= 0) {
-          isX.value = !isX.value;
-          randomSpeed = generateRandomNumber();
+            isX.value = !isX.value
+            randomSpeed = generateRandomNumber()
         }
-        x.value -= isX.value ? 1 : -1;
+        x.value -= isX.value ? 1 : -1
       }
     }
 
     if (isDead.value) {
-      y.value += 1;
+      y.value += 1
       if (y.value >= 500) {
-        y.value = 500;
-        setTimeout(() => {
-          emit('remove-fish', props.id);
-        }, 10000)
+          y.value = 500
+          setTimeout(() => {
+            emit('remove-fish', props.id)
+          }, 10000)
       }
     }
   }
 
   const fishCoordinates = computed(() => {
     return {
-      transform: `translate(${x.value}px, ${y.value}px`
-    };
-  });
+      transform: `translate(${x.value}px, ${y.value}px`,
+    }
+  })
 
   const flipFish = computed(() => {
     return {
-      transform: `${isX.value ? "" : " scaleX(-1)"}`, transition: 'transform 0.5s'
+      transform: `${isX.value ? '' : ' scaleX(-1)'}`,
+      transition: 'transform 0.5s',
     }
   })
 
   const startDirection = computed(() => {
     return {
-      transform: `${directionName.value === 'right' ? "" : "scaleX(-1)"}`
+      transform: `${directionName.value === 'right' ? '' : 'scaleX(-1)'}`,
     }
   })
 
   const hungriness = computed(() => {
     return {
       width: `${stomach.value}%`,
-      backgroundColor: `${stomach.value > 50 ? 'green' : stomach.value > 20 ? 'orange' : 'red'}`
+      backgroundColor: `${
+          stomach.value > 50 ? 'green' : stomach.value > 20 ? 'orange' : 'red'
+      }`,
     }
   })
 
@@ -152,30 +152,35 @@
 
   const hunger = () => {
     if (stomach.value === -50) {
-      isDead.value = true;
+      isDead.value = true
       return
     }
-    stomach.value -= 1;
+
+    stomach.value -= 1
   }
 
   const feedFish = () => {
-    stomach.value = 100;
+    stomach.value = 100
   }
 
-  setInterval(swim, randomSpeed);
-  setInterval(hunger, 200); // 200
+  setInterval(swim, randomSpeed)
+  setInterval(hunger, 200) // 200
 </script>
 
 <template>
-   <div class="fish" :style="fishCoordinates">
+  <div class="fish" :style="fishCoordinates">
     <div class="data-container">
       <div v-if="notification" class="notification">FEED ME!</div>
       <div class="name">{{ props.name }}</div>
     </div>
+
     <div class="wrapper" :style="startDirection" @click="feedFish">
-      <img :src="isDead ? `${skeleton}`: `${fishType}`" :alt="`${fishType}`"
-           :style="flipFish">
+      <img
+          :src="isDead ? `${skeleton}` : `${fishType}`"
+          :alt="`${fishType}`"
+          :style="flipFish" />
     </div>
+
     <div v-if="!isDead" class="stomach">
       <div class="hunger-bar" :style="hungriness"></div>
     </div>
@@ -191,7 +196,6 @@
   .data-container {
     height: 4rem;
     position: relative;
-
   }
 
   @keyframes changeFontSize {
