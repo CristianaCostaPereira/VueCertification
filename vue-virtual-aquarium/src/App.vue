@@ -13,7 +13,7 @@
 
   const minWidth = 1520;
   const minHeight = 860;
-  const aquarium = ref([fishData.value]);
+  const fishTankFish = ref([fishData.value]);
   const isAboveResolution = ref(false);
 
   // const reloadPage = () => {
@@ -26,12 +26,12 @@
   });
 
   const addFish = (payload) => {
-    aquarium.value.push(payload);
+    fishTankFish.value.push(payload);
   }
 
   const removeFish = (id) => {
-    const index = aquarium.value.findIndex(fish => fish.id === id);
-    aquarium.value.splice(index, 1);
+    const index = fishTankFish.value.findIndex(fish => fish.id === id);
+    fishTankFish.value.splice(index, 1);
   }
 </script>
 
@@ -49,7 +49,7 @@
       <header><h1 class="font-effect-shadow-multiple">VUEAquarium</h1></header>
 
       <main>
-        <Aquarium :fish-tank-fish="aquarium" @remove-fish="removeFish"/>
+        <Aquarium :fish-tank-fish="fishTankFish" @remove-fish="removeFish"/>
         <FishForm @add-fish="addFish"/>
       </main>
     </div>

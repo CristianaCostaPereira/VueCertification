@@ -1,43 +1,17 @@
 <script setup>
   import Fish from "./Fish.vue";
 
-  // const fishData = {
-  //   name: string,
-  //   type: string,
-  //   startX: number,
-  //   startY: number,
-  //   id: string,
-  // }
-
-  const props = defineProps({
-    aquarium: {
-      type: Array,
-      required: true,
-    }
+  defineProps({
+    allFish: { type: Array, default: () => [] },
   });
-
-  const emit = defineEmits(['addFish', 'removeFish']);
-
-  const addFish = () => {
-    emit('addFish');
-  };
-
-  const removeFish = (id) => {
-    emit('removeFish', id);
-  }
 </script>
 
 <template>
-  <div class="aquarium" ref="fishTank">
+  <div class="aquarium" id="aquarium">
     <Fish
-      v-for="fish in props.aquarium"
-      :key="fish.id"
-      :name="fish.name"
-      :type="fish.type"
-      :start-x="fish.startX"
-      :start-y="fish.startY"
-      :id="fish.id"
-      @remove-fish="removeFish">
+      v-for="fish in allFish"
+      :key="fish.name"
+      v-bind="fish">
     </Fish>
   </div>
 </template>

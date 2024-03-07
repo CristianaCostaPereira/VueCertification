@@ -1,254 +1,206 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue'
-  import tuna from '../public/tuna.png'
-  import tropical from '../public/tropical-fish.png'
-  import guppie from '../public/guppie.png'
-  import goldfish from '../public/goldfish.png'
-  import purple from '../public/golden-purple-fish.png'
-  import skeleton from '../public/dead.png'
+  import { computed, onMounted, ref } from 'vue';
 
-  const props = defineProps({
-    aquarium: {
-      name: { type: String, default: '' },
-      type: { type: String, default: '' },
-      startX: { type: Number },
-      startY: { type: Number },
-      id: { type: String, default: '' },
-    }
-  })
-
-  // const props = defineProps({
-  //   modelValue: { type: Object, default: null },
-  // });
-
-  const y = ref(props.startY)
-  const x = ref(props.startX)
-  const isY = ref(true)
-  const isX = ref(true)
-  const directionName = ref('')
-  const stomach = ref(100)
-  const isDead = ref(false)
+  defineProps({
+    type: { type: String },
+    name: { type: String },
+    size: { type: String },
+  });
 
   const emit = defineEmits(['remove-fish'])
 
+  // Handle moving fish
+  const fishDOMEl = ref();
+  const aquariumEl = ref();
+
+  const position = ref({
+    x: 0,
+    y: 0,
+  });
+
+  const minMilliseconds = 4000;
+  const maxMilliseconds = 10_000;
+  const generateTimeout = () =>
+    Math.floor(Math.random() * maxMilliseconds) + minMilliseconds;
+  const timeout = ref(0);
+  const transition = computed(() => `all ${timeout.value / 1000}s linear`);
+
+  function doTimeout() {
+    timeout.value = generateTimeout();
+    setTimeout(() => {
+      moveFish();
+      doTimeout();
+    }, timeout.value);
+  }
+
+  function moveFish() {
+    directionRight.value = !directionRight.value;
+    position.value = {
+      x: generateXPosition(),
+      y: generateYPosition(),
+    };
+  }
+
+  function generateXPosition() {
+    const x =
+      Math.random() * aquariumEl.value.offsetWidth - fishDOMEl.value.clientWidth;
+    const xPadded = x < 0 ? 0 : x;
+    if (position.value.x === 0) return xPadded;
+
+    if (
+      // only move in the opposite direction
+      directionRight.value &&
+      xPadded > position.value.x &&
+      // and move at least 200 pixels horizontally
+      xPadded + 200 > position.value.x
+    ) {
+      return xPadded;
+    } else if (
+      // only move in the opposite direction
+      !directionRight.value &&
+      xPadded < position.value.x &&
+      // and move at least 200 pixels horizontally
+      xPadded - 200 < position.value.x
+    ) {
+      return xPadded;
+    } else {
+      return generateXPosition();
+    }
+  }
+
+  function generateYPosition() {
+    const y =
+      Math.random() * aquariumEl.value.offsetHeight -
+      fishDOMEl.value.clientHeight;
+    const yPadded = y < 0 ? 0 : y;
+
+    // move this fish at least 200 pixels vertically
+    if (yPadded > position.value.y && yPadded + 200 > position.value.y) {
+      return yPadded;
+    } else if (yPadded < position.value.y && yPadded - 200 < position.value.y) {
+      return yPadded;
+    } else {
+      return generateYPosition();
+    }
+  }
+
   onMounted(() => {
-    leftOrRightFloat()
-  })
+    aquariumEl.value = document.querySelector("#aquarium");
 
-  const generateRandomNumber = () => {
-    const numbers = [35, 45, 55, 65]
-    const randomIndex = Math.floor(Math.random() * numbers.length)
-    return numbers[randomIndex]
+    moveFish();
+    setTimeout(() => {
+      moveFish();
+      doTimeout();
+    }, 2);
+  });
+
+  const directionRight = ref(generateDirection());
+  function generateDirection() {
+    return Math.random() > 0.5;
   }
 
-  const leftOrRightFloat = () => {
-    const direction = ['left', 'right']
-    const random = Math.floor(Math.random() * 2)
-    directionName.value = direction[random]
-    return direction[random]
+  // Fish hunger
+  const hunger = ref(0);
+  const isHungry = ref(false);
+  const isDead = ref(false);
+
+  // Increment hunger every second
+  setInterval(() => {
+    if (hunger.value < 100) {
+      hunger.value++;
+      isHungry.value = hunger.value >= 70;
+    } else {
+      isHungry.value = false;
+      isDead.value = true;
+      setTimeout(() => {
+        emit("remove");
+      }, 5_000);
+    }
+  }, 100);
+
+  function feedFish() {
+    hunger.value = 0; // Reset hunger level when fish is fed
   }
 
-  let randomSpeed = generateRandomNumber()
-
-  const fishType = computed(() => {
-  let image = ''
-    switch (props.type) {
-      case 'tuna':
-        image = tuna
-        break
-      case 'tropical':
-        image = tropical
-        break
-      case 'guppie':
-        image = guppie
-        break
-      case 'goldfish':
-        image = goldfish
-        break
-      case 'purple':
-        image = purple
-        break
+  const size = computed(() => {
+    const random = Math.random();
+    if (random <= 0.2) {
+      return "w-16";
+    } else if (random <= 0.5) {
+      return "w-24";
+    } else if (random >= 0.9) {
+      return "w-48";
     }
-
-    return image
-  })
-
-  const swim = () => {
-    if (!isDead.value) {
-      if (directionName.value === 'right') {
-        if (y.value >= 410 || y.value <= 0) {
-          isY.value = !isY.value
-          randomSpeed = generateRandomNumber()
-        }
-
-        y.value += isY.value ? 1 : -1
-
-        if (x.value >= 830 || x.value <= 0) {
-          isX.value = !isX.value
-          randomSpeed = generateRandomNumber()
-        }
-
-        x.value += isX.value ? 1 : -1
-      }
-
-      if (directionName.value === 'left') {
-        if (y.value >= 410 || y.value <= 0) {
-          isY.value = !isY.value
-          randomSpeed = generateRandomNumber()
-        }
-
-        y.value -= isY.value ? 1 : -1
-
-        if (x.value >= 830 || x.value <= 0) {
-            isX.value = !isX.value
-            randomSpeed = generateRandomNumber()
-        }
-        x.value -= isX.value ? 1 : -1
-      }
-    }
-
-    if (isDead.value) {
-      y.value += 1
-      if (y.value >= 500) {
-          y.value = 500
-          setTimeout(() => {
-            emit('remove-fish', props.id)
-          }, 10000)
-      }
-    }
-  }
-
-  const fishCoordinates = computed(() => {
-    return {
-      transform: `translate(${x.value}px, ${y.value}px`,
-    }
-  })
-
-  const flipFish = computed(() => {
-    return {
-      transform: `${isX.value ? '' : ' scaleX(-1)'}`,
-      transition: 'transform 0.5s',
-    }
-  })
-
-  const startDirection = computed(() => {
-    return {
-      transform: `${directionName.value === 'right' ? '' : 'scaleX(-1)'}`,
-    }
-  })
-
-  const hungriness = computed(() => {
-    return {
-      width: `${stomach.value}%`,
-      backgroundColor: `${
-          stomach.value > 50 ? 'green' : stomach.value > 20 ? 'orange' : 'red'
-      }`,
-    }
-  })
-
-  const notification = computed(() => {
-    return stomach.value <= 20 && isDead.value === false
-  })
-
-  const hunger = () => {
-    if (stomach.value === -50) {
-      isDead.value = true
-      return
-    }
-
-    stomach.value -= 1
-  }
-
-  const feedFish = () => {
-    stomach.value = 100
-  }
-
-  setInterval(swim, randomSpeed)
-  setInterval(hunger, 200) // 200
+    return "w-32";
+  });
 </script>
 
 <template>
-  <div class="fish" :style="fishCoordinates">
-    <div class="data-container">
-      <div v-if="notification" class="notification">FEED ME!</div>
-      <div class="name">{{ props.name }}</div>
+  <div
+    class="text-center fish"
+    :style="{
+      left: `${position.x}px`,
+      top: `${position.y}px`,
+      transition: timeout ? transition : false,
+    }"
+    ref="fishDOMEl">
+
+    <img
+      key="fish"
+      :src="`/${isDead ? 'dead' : type}.png`"
+      :alt="name"
+      class="inline-block"
+      :class="size"
+      :style="{
+        transition: `all ${1.1 - timeout / maxMilliseconds}s ease`,
+        transform: `scaleX(${directionRight ? 1 : -1})`,
+      }"
+    />
+
+    <br />
+
+    <div class="mt-2 text-center text-white bg-[rgba(0,0,0,.6)] p-2 rounded inline relative overflow-hidden">
+      {{ name }}
+
+      <div
+        :class="{
+          'bg-green-600': hunger < 30,
+          'bg-yellow-600': hunger >= 30 && hunger < 70,
+          'bg-red-600': hunger >= 70,
+        }"
+        class="absolute bottom-0 left-0 w-full h-1"
+        :style="{ width: (hunger / 100) * 100 + '%' }">
+      </div>
     </div>
 
-    <div class="wrapper" :style="startDirection" @click="feedFish">
-      <img
-          :src="isDead ? `${skeleton}` : `${fishType}`"
-          :alt="`${fishType}`"
-          :style="flipFish" />
-    </div>
+    <button
+      v-if="isHungry"
+      @click="feedFish"
+      style="transform: translateX(-50%)"
+      class="speech-bubble">
 
-    <div v-if="!isDead" class="stomach">
-      <div class="hunger-bar" :style="hungriness"></div>
-    </div>
+      Feed Me <span class="font-bold text-red-600">!</span>
+    </button>
   </div>
 </template>
 
 <style scoped>
   .fish {
-    width: 150px;
     position: absolute;
   }
 
-  .data-container {
-    height: 4rem;
-    position: relative;
+  .speech-bubble {
+    @apply absolute bottom-[100%] px-4 py-2 rounded-full left-[50%] whitespace-nowrap;
+    background: rgba(255, 255, 255, 0.9);
   }
-
-  @keyframes changeFontSize {
-    0% {
-      font-size: 1.5rem;
-      color: salmon;
-    }
-    50% {
-      font-size: 2rem;
-      color: red;
-    }
-    100% {
-      font-size: 1.5rem;
-      color: salmon;
-    }
-  }
-
-  .notification {
-    text-align: center;
-    animation-name: changeFontSize;
-    animation-duration: 2s;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-  }
-
-  .name {
-    background-color: rgba(219, 203, 187, 0.8);
-    text-align: center;
-    font-size: 1.5rem;
+  .speech-bubble::before {
+    content: "";
     position: absolute;
-    top: 75%;
+    border-style: solid;
+    border-width: 10px;
+    border-color: transparent rgba(255, 255, 255, 0.9) transparent transparent;
+    top: 99%;
     left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .fish img {
-    width: 100%;
-  }
-
-  .fish img:hover {
-    cursor: pointer;
-  }
-
-  .stomach {
-    margin-left: 10%;
-    width: 80%;
-    height: 10px;
-    background-color: white;
-    border-radius: 50px;
-  }
-
-  .hunger-bar {
-    height: 100%;
-    border-radius: 50px;
+    transform: translateX(-50%) rotate(-90deg);
   }
 </style>
