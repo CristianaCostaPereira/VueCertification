@@ -1,61 +1,105 @@
 <script setup>
-import { ref } from "vue";
-const questions = [
-  {
-    question: "What is the capital of France?",
-    options: ["London", "Berlin", "Paris", "Rome"],
-    answer: "Paris",
-  },
-  {
-    question: "Which planet is closest to the sun?",
-    options: ["Earth", "Mars", "Venus", "Mercury"],
-    answer: "Mercury",
-  },
-  // Add more questions as needed
-];
+  import { ref } from "vue";
 
-const error = ref('Incorrect');
+  const questions = [
+    {
+      question: "What is the capital of France?",
+      options: ["London", "Berlin", "Paris", "Rome"],
+      answer: "Paris",
+    },
+    {
+      question: "Which planet is closest to the sun?",
+      options: ["Earth", "Mars", "Venus", "Mercury"],
+      answer: "Mercury",
+    },
+    // Add more questions as needed
+  ];
 
-const correctAnswer = ref('Correct')
+  const currentIndex = ref(0);
+  const selectedAnswer = ref(null);
+  const score = ref(0);
+  const quizState = ref("initial");
+
+  function submitAnswer() {
+    if (!selectedAnswer.value) {
+      return;
+    }
+
+    if (selectedAnswer.value === questions[currentIndex.value].answer) {
+      score.value++;
+    }
+
+    quizState.value = "answered";
+  }
+
+  function nextQuestion() {
+    if (currentIndex.value < questions.length - 1) {
+      currentIndex.value++;
+      selectedAnswer.value = null;
+      quizState.value = "initial";
+    } else {
+      quizState.value = "completed";
+    }
+  }
 </script>
 
 <template>
-  <form class="max-w-md mx-auto">
+  <div v-if="quizState !== 'completed'">
+    <h2 class="p-4 text-4xl border-b border-white">
+      {{ questions[currentIndex].question }}
+    </h2>
+
     <div
-      v-for="(question, index) in questions"
-      :key="question.index"
-      class="relative z-0 w-full mb-5 group">
+      v-for="(option, index) in questions[currentIndex].options"
+      :key="index"
+      class="flex px-12 py-4 text-3xl gap-x-4">
 
-      <div>
-        <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">
-          {{ question.question }}
-        </h3>
+      <input
+        type="radio"
+        :id="'option-' + index"
+        :value="option"
+        :disabled="quizState === 'answered'"
+        v-model="selectedAnswer"
+      />
 
-        <div
-          v-for="option in question.options"
-          :key="option"
-          class="flex items-center mb-4">
-
-          <input
-            id="answer-options"
-            type="radio"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-
-            <label
-              for="answer-options"
-              class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-
-              {{ option }}
-            </label>
-        </div>
-      </div>
+      <label :for="'option-' + index">
+        {{ option }}
+      </label>
     </div>
 
-    <button
-      type="submit"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <div class="flex items-center justify-between space-x-5">
+      <div class="flex-1">
+        <p
+          v-if="quizState === 'answered'"
+          :class="{
+            'text-red-500 bg-red-500/20 border-red-500': selectedAnswer !== questions[currentIndex].answer,
+            'text-green-500 bg-green-500/20 border-green-500': selectedAnswer === questions[currentIndex].answer,
+          }"
+          class="py-1.5 border text-center">
 
-      Submit
-    </button>
-  </form>
+          {{ selectedAnswer === questions[currentIndex].answer ? "Correct!" : "Incorrect!" }}
+        </p>
+      </div>
+
+      <button
+        v-if="quizState === 'initial'"
+        class="w-30 px-3 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-400 shrink-0"
+        @click="submitAnswer">
+
+        Submit
+      </button>
+
+      <button
+        v-if="quizState === 'answered'"
+        class="w-20 px-3 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-400 shrink-0"
+        @click="nextQuestion">
+
+        Next
+      </button>
+    </div>
+  </div>
+
+  <div v-else class="text-4xl">
+    <h2>Your final score: {{ score }} out of {{ questions.length }}</h2>
+  </div>
 </template>
