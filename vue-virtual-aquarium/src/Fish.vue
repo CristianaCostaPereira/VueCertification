@@ -190,14 +190,7 @@
   }
 
   .speech-bubble {
-    /* @apply absolute bottom-[100%] px-4 py-2 rounded-full left-[50%] whitespace-nowrap; */
-    position: absolute;
-    bottom: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 16px; /* Adjust px-4 and py-2 values accordingly */
-    border-radius: 9999px; /* Rounded-full in Tailwind CSS */
-    white-space: nowrap;
+    @apply absolute bottom-[100%] px-4 py-2 rounded-full left-[50%] whitespace-nowrap;
     background: rgba(255, 255, 255, 0.9);
   }
   
