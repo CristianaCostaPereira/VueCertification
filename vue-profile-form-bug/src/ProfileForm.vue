@@ -11,8 +11,7 @@ const props = defineProps({
 });
 const user = ref(props.user);
 const update = () => {
-  debugger
-  emit("update", user);
+  emit("update", { ...unref(user) });
 };
 </script>
 
@@ -36,7 +35,8 @@ const update = () => {
                 id="first-name"
                 autocomplete="given-name"
                 class="input"
-              />
+
+                />
             </div>
           </div>
 
