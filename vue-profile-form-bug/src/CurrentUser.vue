@@ -1,10 +1,10 @@
 <script setup>
-defineProps({
-  user: {
-    type: Object,
-    required: true,
-  },
-});
+  defineProps({
+    user: {
+      type: Object,
+      required: true,
+    },
+  });
 </script>
 
 <template>

@@ -1,18 +1,23 @@
 <script setup>
-import { ref, unref } from "vue";
+  import { ref, unref } from "vue";
 
-const emit = defineEmits(["update"]);
+  const emit = defineEmits(["update"]);
 
-const props = defineProps({
-  user: {
-    type: Object,
-    required: true,
-  },
-});
-const user = ref(props.user);
-const update = () => {
-  emit("update", { ...unref(user) });
-};
+  const props = defineProps({
+    user: {
+      type: Object,
+      required: true,
+    },
+  });
+
+  // To create a shallow copy of the props.user object
+  // Creating a shallow copy, we avoid directly modifying the original object passed as a prop.
+  // Ensures that we are not modifying the original props.user directly when working with reactive properties
+  const user = ref({...props.user});
+
+  const update = () => {
+    emit("update", { ...unref(user) });
+  };
 </script>
 
 <template>
