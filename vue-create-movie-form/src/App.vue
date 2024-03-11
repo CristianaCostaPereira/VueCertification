@@ -47,7 +47,9 @@ const validationRules = (rule) => {
 
 function validate() {
   let valid = true;
+
   clearErrors();
+
   for (const [field, rule] of Object.entries(validations)) {
     const validation = validationRules(rule);
     if (validation) {
