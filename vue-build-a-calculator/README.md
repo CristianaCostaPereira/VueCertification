@@ -5,6 +5,8 @@ chapter: "Chapter 5: Challenge Roundup"
 tags: vue
 ---
 
+# Run the app: npm run dev
+
 # Simple Calculator
 
 Build a simple calculator using Vue.js 3.
