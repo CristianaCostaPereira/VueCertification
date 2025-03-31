@@ -23,7 +23,12 @@ function dot() {
 }
 
 function equal() {
-  current.value = eval(current.value);
+  // current.value = eval(current.value);
+  try {
+    current.value = new Function("return " + current.value)();
+  } catch {
+    current.value = "Error";
+  }
 }
 </script>
 
